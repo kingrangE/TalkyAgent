@@ -7,9 +7,9 @@
 
 ### Todo
 
-[ ] Implementation Agent 
-[ ] Implementation Memory
-[ ] Implementation Test Dataset (for evaluation)
+- [ ] Implementation Agent 
+- [ ] Implementation Memory
+- [ ] Implementation Test Dataset (for evaluation)
 
 ### Architecture
 
