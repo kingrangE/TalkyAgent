@@ -33,7 +33,7 @@ class PromptTemplate :
         data.update({k: v for k, v in zip(self.expected_inputs, args)}) # positional argument가 있는 경우 추가
         return self.__format(**data)
         
-class NEExtractionPrompt(PromptTemplate):
+class NEExtractionTemplate(PromptTemplate):
     def __init__(self,lang:Literal['en','kr']='kr'):
         if lang=='kr':
             # 한국어 prompt 반환
@@ -67,6 +67,12 @@ class NEExtractionPrompt(PromptTemplate):
 
         입력 텍스트:
         {text}
+
+        다음 입력 텍스트에 대한 추출을 지속하세요.
+        당신은 과거 기록에 전달된 기존의 노드와 관계를 참고하여 새로운 노드와 관계를 작성하면 됩니다.
+        과거 기록:
+        {history}
+
         """
         else :
             # 영어 Prompt 반환
@@ -98,10 +104,15 @@ class NEExtractionPrompt(PromptTemplate):
         {examples}
 
         Input text:
-
         {text}
+        
+        (Continue extracting the graph for the following input text.
+        You should refer to the existing nodes and relationships from the graph history and write only new nodes and relationships.
+        Graph History : 
+        {history}
+        )
         """
-        EXPECTED_INPUTS = ["text"]
+        EXPECTED_INPUTS = ["text","history"]
         super().__init__(template=DEFAULT_TEMPLATE,expected_inputs=EXPECTED_INPUTS)
 
 
@@ -110,8 +121,9 @@ class NEExtractionPrompt(PromptTemplate):
         schema: dict[str, Any],
         examples: str,
         text: str = "",
+        history: str = "",
     ) -> str:
-        return super().format(text=text, schema=schema, examples=examples)
+        return super().format(text=text, schema=schema, examples=examples, history=history)
 
 if __name__ == "__main__":
     kr = NEExtractionPrompt("kr").format(schema='',examples='',text="hi")
